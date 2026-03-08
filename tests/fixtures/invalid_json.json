@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "broken": {
+      "command": "python3",
+      "args": []
+    }
+  }

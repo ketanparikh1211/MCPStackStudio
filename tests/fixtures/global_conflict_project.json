@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "search": {
+      "command": "node",
+      "args": ["server.js"]
+    }
+  }
+}

@@ -3,531 +3,2427 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Developer Dashboard</title>
+<title>MCPStackStudio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0a;
-    --surface: #141414;
-    --surface2: #1e1e1e;
-    --border: #2a2a2a;
-    --text: #e4e4e7;
-    --text2: #a1a1aa;
-    --accent: #3b82f6;
-    --green: #22c55e;
-    --yellow: #eab308;
-    --red: #ef4444;
-    --purple: #a855f7;
-    --radius: 12px;
+    --bg: #06111b;
+    --bg-2: #0d2034;
+    --panel: rgba(8, 20, 35, 0.84);
+    --panel-strong: rgba(11, 25, 42, 0.94);
+    --panel-soft: rgba(20, 39, 61, 0.74);
+    --line: rgba(118, 158, 214, 0.2);
+    --line-strong: rgba(118, 158, 214, 0.38);
+    --text: #eef4ff;
+    --muted: #9cb1cf;
+    --accent: #5bb7ff;
+    --accent-2: #ff8c42;
+    --ok: #58e38d;
+    --warn: #f7c948;
+    --critical: #ff5d73;
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(91, 183, 255, 0.19), transparent 26%),
+      radial-gradient(circle at 88% 12%, rgba(255, 140, 66, 0.16), transparent 22%),
+      linear-gradient(180deg, #081421 0%, #06111b 48%, #071420 100%);
+  }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-    background: var(--bg);
-    color: var(--text);
     min-height: 100vh;
-    padding: 24px;
+    color: var(--text);
+    font-family: "Instrument Sans", "Segoe UI", sans-serif;
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 
-  header {
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(91, 183, 255, 0.12), transparent 22%),
+      radial-gradient(circle at 80% 8%, rgba(255, 140, 66, 0.1), transparent 18%),
+      radial-gradient(circle at 50% 100%, rgba(91, 183, 255, 0.08), transparent 28%);
+  }
+
+  .page-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 24px 24px 56px;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .hero-copy,
+  .hero-side {
+    background:
+      linear-gradient(145deg, rgba(15, 29, 47, 0.96), rgba(6, 14, 24, 0.93));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    position: relative;
+    min-width: 0;
+  }
+
+  .hero-copy {
+    padding: 34px;
+  }
+
+  .hero-copy::after {
+    content: "";
+    position: absolute;
+    inset: auto -60px -60px auto;
+    width: 240px;
+    height: 240px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(91, 183, 255, 0.18), transparent 70%);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(91, 183, 255, 0.22);
+    background: rgba(91, 183, 255, 0.08);
+    color: #c8e6ff;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 16px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--ok);
+    box-shadow: 0 0 12px rgba(88, 227, 141, 0.75);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Space Grotesk", "Instrument Sans", sans-serif;
+  }
+
+  .hero-copy h1 {
+    max-width: 12ch;
+    font-size: clamp(2.5rem, 4vw, 4.2rem);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    margin-top: 14px;
+  }
+
+  .hero-copy p {
+    max-width: 58ch;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--muted);
+    margin-top: 28px;
+  }
+
+  .hero-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .hero-pill {
+    display: grid;
+    grid-template-columns: minmax(92px, auto) minmax(0, 1fr);
+    align-items: center;
+    column-gap: 16px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    min-width: 160px;
+  }
+
+  .hero-pill-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .hero-pill strong {
+    display: block;
+    font-size: 1.9rem;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+  }
+
+  .hero-pill span {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 0;
+  }
+
+  .hero-pill .hero-pill-meta {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  h1 {
-    font-size: 24px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  #status {
     font-size: 13px;
-    color: var(--text2);
+    color: var(--muted);
+    line-height: 1.4;
+    min-height: 100%;
+  }
+
+  .hero-side {
+    padding: 20px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 16px;
+  }
+
+  .controls-card,
+  .visual-card,
+  .section-shell,
+  .coverage-shell {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(16px);
+  }
+
+  .controls-card {
+    padding: 22px 20px 20px;
+    background:
+      linear-gradient(180deg, rgba(14, 28, 45, 0.92), rgba(8, 18, 30, 0.9));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    min-height: 188px;
+    min-width: 0;
+  }
+
+  .controls-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .field,
+  .btn,
+  select {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.045);
+    color: var(--text);
+    border-radius: 16px;
+    min-height: 52px;
+    padding: 0 16px;
+    font: inherit;
+  }
+
+  .field,
+  select {
+    width: 100%;
+  }
+
+  #token-input {
+    min-width: 0;
+    padding-left: 22px;
+    padding-right: 22px;
+    letter-spacing: -0.01em;
+  }
+
+  .field::placeholder {
+    color: rgba(156, 177, 207, 0.7);
+    font-size: 0.86rem;
   }
 
   .btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 16px;
-    border-radius: 8px;
+    font-weight: 700;
     cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.15s;
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    white-space: nowrap;
+    justify-self: stretch;
+    min-width: 106px;
+    text-align: center;
   }
-  .btn:hover { background: var(--border); }
-  .btn:active { transform: scale(0.97); }
 
-  .section {
-    margin-bottom: 36px;
+  .btn:hover {
+    transform: translateY(-1px);
+    border-color: var(--line-strong);
+  }
+
+  .btn.primary {
+    background: linear-gradient(135deg, #285ea7, #4b93f8);
+    border-color: rgba(120, 179, 255, 0.6);
+    padding-inline: 22px;
+    min-width: 138px;
+  }
+
+  .btn.secondary {
+    background: linear-gradient(135deg, rgba(255, 140, 66, 0.16), rgba(255, 140, 66, 0.06));
+    border-color: rgba(255, 140, 66, 0.28);
+  }
+
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .controls-top > * {
+    min-width: 0;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .status-chip strong {
+    color: var(--text);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  .visual-card {
+    position: relative;
+    padding: 18px;
+    overflow: hidden;
+    min-height: 320px;
+    min-width: 0;
+  }
+
+  .visual-card::before,
+  .visual-card::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    pointer-events: none;
+    filter: blur(10px);
+  }
+
+  .visual-card::before {
+    top: -26px;
+    right: -40px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(91, 183, 255, 0.28), transparent 70%);
+  }
+
+  .visual-card::after {
+    left: -40px;
+    bottom: -30px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 140, 66, 0.24), transparent 72%);
+  }
+
+  .visual-topline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    min-width: 0;
+  }
+
+  .visual-kicker {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  .scan-id {
+    font-size: 12px;
+    color: #d8e8ff;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(91, 183, 255, 0.12);
+    border: 1px solid rgba(91, 183, 255, 0.22);
+  }
+
+  .visual-headline {
+    max-width: 18ch;
+    font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    margin-bottom: 10px;
+  }
+
+  .visual-copy {
+    max-width: 46ch;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .logo-cloud {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .brand-card {
+    position: relative;
+    padding: 14px;
+    border-radius: 18px;
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    min-height: 112px;
+    overflow: hidden;
+    animation: floatY 6s ease-in-out infinite;
+    transition: border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .brand-card:nth-child(2n) { animation-delay: 0.7s; }
+  .brand-card:nth-child(3n) { animation-delay: 1.4s; }
+
+  .brand-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(91, 183, 255, 0.08), transparent 48%);
+    pointer-events: none;
+  }
+
+  .brand-card:hover {
+    border-color: rgba(91, 183, 255, 0.22);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .brand-card strong {
+    display: block;
+    font-size: 14px;
+    margin-top: 18px;
+  }
+
+  .brand-card span {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .visual-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .metric-card {
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .metric-card span {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .metric-card strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .summary-card {
+    background: linear-gradient(160deg, rgba(13, 29, 49, 0.96), rgba(9, 19, 30, 0.96));
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 18px;
+    transition: border-color 200ms ease, transform 200ms ease;
+  }
+
+  .summary-card:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-1px);
+  }
+
+  .summary-card span {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .summary-card strong {
+    display: block;
+    margin-top: 12px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.06em;
+  }
+
+  .summary-card em {
+    display: block;
+    margin-top: 10px;
+    font-style: normal;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(360px, 0.88fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .section-shell,
+  .coverage-shell {
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+
+  .section-shell:last-child,
+  .coverage-shell:last-child {
+    margin-bottom: 0;
   }
 
   .section-header {
     display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .section-heading h2 {
+    font-size: 24px;
+    letter-spacing: -0.04em;
+  }
+
+  .section-heading p {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .count {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
     margin-bottom: 16px;
   }
 
-  .section-header h2 {
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
+  .filters select {
+    min-width: 0;
+    width: auto;
+    flex: 1 1 0;
+    min-height: 40px;
+    padding: 0 32px 0 12px;
+    font-size: 13px;
+    border-radius: 12px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239cb1cf' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+    transition: border-color 160ms ease;
   }
 
-  .count-badge {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    color: var(--text2);
-    font-weight: 500;
+  .filters select:hover {
+    border-color: var(--line-strong);
+  }
+
+  .filters select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .issue-list,
+  .drift-list,
+  .mcp-list,
+  .history-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .issue-card,
+  .drift-card,
+  .mcp-card,
+  .history-card,
+  .tool-card {
+    background: linear-gradient(160deg, rgba(17, 32, 52, 0.9), rgba(8, 18, 30, 0.94));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 16px;
+    transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+  }
+
+  .tool-card:hover {
+    border-color: rgba(91, 183, 255, 0.22);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(91, 183, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .issue-card {
+    border-left: 3px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .issue-card:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .sev-critical { border-left-color: var(--critical); }
+  .sev-high { border-left-color: #ff9b54; }
+  .sev-medium { border-left-color: var(--warn); }
+  .sev-low { border-left-color: var(--ok); }
+
+  .issue-top,
+  .mcp-top,
+  .history-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tool-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .issue-title,
+  .tool-name,
+  .mcp-title,
+  .history-title {
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  .issue-meta,
+  .mcp-meta,
+  .history-meta,
+  .tool-meta,
+  .tool-path,
+  .command-line,
+  .support-copy {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .issue-meta,
+  .mcp-meta,
+  .history-meta,
+  .tool-meta,
+  .tool-path {
+    margin-top: 8px;
+  }
+
+  .tool-path,
+  .command-line {
+    font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
+    word-break: break-word;
+  }
+
+  .chip-row,
+  .detail-row,
+  .server-row,
+  .brand-ribbon {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip-row,
+  .detail-row,
+  .server-row {
+    margin-top: 12px;
+  }
+
+  .chip,
+  .detail-chip,
+  .server-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 11px;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .chip.ok { color: var(--ok); background: rgba(88, 227, 141, 0.08); border-color: rgba(88, 227, 141, 0.18); }
+  .chip.warn { color: var(--warn); background: rgba(247, 201, 72, 0.08); border-color: rgba(247, 201, 72, 0.18); }
+  .chip.critical { color: var(--critical); background: rgba(255, 93, 115, 0.08); border-color: rgba(255, 93, 115, 0.18); }
+  .chip.accent { color: #b3ddff; background: rgba(91, 183, 255, 0.08); border-color: rgba(91, 183, 255, 0.18); }
+
+  .severity-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 94px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .severity-pill.critical { color: var(--critical); background: rgba(255, 93, 115, 0.1); border-color: rgba(255, 93, 115, 0.2); }
+  .severity-pill.high { color: #ff9b54; background: rgba(255, 155, 84, 0.1); border-color: rgba(255, 155, 84, 0.2); }
+  .severity-pill.medium { color: var(--warn); background: rgba(247, 201, 72, 0.1); border-color: rgba(247, 201, 72, 0.2); }
+  .severity-pill.low { color: var(--ok); background: rgba(88, 227, 141, 0.1); border-color: rgba(88, 227, 141, 0.2); }
+
+  .drift-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .mini {
+    padding: 14px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .mini span {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  .mini strong {
+    display: block;
+    margin-top: 10px;
+    font-size: 28px;
+    line-height: 1;
+    font-family: "Space Grotesk", sans-serif;
   }
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 12px;
   }
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    transition: all 0.15s;
+  .tool-card {
+    min-height: 206px;
+  }
+
+  .tool-text {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .tool-name,
+  .mcp-title,
+  .history-title {
+    word-break: break-word;
+  }
+
+  .logo-mark {
     position: relative;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
     overflow: hidden;
-  }
-  .card:hover {
-    border-color: #3a3a3a;
-    transform: translateY(-1px);
-  }
-
-  .card-active {
-    border-color: rgba(34, 197, 94, 0.3);
-  }
-
-  .card-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 12px;
+    flex: 0 0 auto;
   }
 
-  .card-title {
+  .logo-mark.small {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+  }
+
+  .logo-mark img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  }
+
+  .logo-mark.small img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .logo-fallback {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    font-family: "Space Grotesk", sans-serif;
     font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 4px;
+    font-weight: 700;
+    color: var(--text);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(91, 183, 255, 0.12));
   }
 
-  .card-detail {
-    font-size: 12px;
-    color: var(--text2);
-    margin-bottom: 4px;
-    word-break: break-all;
-  }
-
-  .card-type {
-    font-size: 11px;
-    color: var(--text2);
-    opacity: 0.6;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 8px;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    margin-top: 6px;
-  }
-
-  .badge-running { background: rgba(34,197,94,0.15); color: var(--green); }
-  .badge-installed { background: rgba(59,130,246,0.15); color: var(--accent); }
-  .badge-available { background: rgba(168,85,247,0.15); color: var(--purple); }
-  .badge-process { background: rgba(234,179,8,0.15); color: var(--yellow); }
-
-  /* Icon colors */
-  .icon-vscode { background: #0078d4; color: #fff; }
-  .icon-cursor { background: #000; color: #fff; border: 1px solid var(--border); }
-  .icon-claude { background: #d97706; color: #fff; }
-  .icon-codex { background: #10b981; color: #fff; }
-  .icon-xcode { background: #147efb; color: #fff; }
-  .icon-jetbrains { background: #fe315d; color: #fff; }
-  .icon-sublime { background: #ff9800; color: #fff; }
-  .icon-zed { background: #8b5cf6; color: #fff; }
-  .icon-terminal { background: #27272a; color: #22c55e; border: 1px solid var(--border); }
-  .icon-ollama { background: #fff; color: #000; }
-  .icon-aider { background: #14b8a6; color: #fff; }
-  .icon-openai { background: #000; color: #10a37f; border: 1px solid var(--border); }
-  .icon-extension { background: #6366f1; color: #fff; }
-  .icon-model { background: #8b5cf6; color: #fff; }
-  .icon-process { background: #eab308; color: #000; }
-  .icon-github { background: #fff; color: #000; }
-  .icon-default { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
-  .icon-windsurf { background: #06b6d4; color: #fff; }
-  .icon-lmstudio { background: #2563eb; color: #fff; }
-  .icon-nova { background: #6366f1; color: #fff; }
-  .icon-android { background: #3ddc84; color: #000; }
-  .icon-atom { background: #40a02b; color: #fff; }
-  .icon-goose { background: #f97316; color: #fff; }
-  .icon-opencode { background: #06b6d4; color: #fff; }
-
-  /* MCP section */
-  .mcp-list {
+  .logo-mark.no-image .logo-fallback {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
   }
 
-  .mcp-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+  .brand-ribbon {
+    margin-top: 16px;
+  }
+
+  .brand-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 54px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
+  }
+
+  .brand-pill:hover {
+    border-color: rgba(91, 183, 255, 0.2);
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateY(-1px);
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  .brand-pill .logo-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+  }
+
+  .mcp-studio-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 12px;
+  }
+
+  .studio-pane {
+    min-width: 0;
     padding: 16px;
-    transition: all 0.15s;
+    border-radius: 18px;
+    background: linear-gradient(160deg, rgba(15, 30, 49, 0.88), rgba(8, 18, 31, 0.94));
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .mcp-card:hover { border-color: #3a3a3a; }
 
-  .mcp-header {
+  .studio-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    cursor: pointer;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
   }
 
-  .mcp-name {
+  .studio-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .studio-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .btn.small {
+    min-height: 36px;
+    border-radius: 12px;
+    font-size: 12px;
+    min-width: 88px;
+    padding-inline: 12px;
+  }
+
+  .btn.danger {
+    background: linear-gradient(135deg, rgba(255, 93, 115, 0.16), rgba(255, 93, 115, 0.06));
+    border-color: rgba(255, 93, 115, 0.36);
+  }
+
+  .catalog-search {
+    margin-bottom: 10px;
+    min-height: 44px;
+    border-radius: 12px;
+  }
+
+  .catalog-list {
+    display: grid;
+    gap: 10px;
+    max-height: 620px;
+    overflow: auto;
+    padding-right: 2px;
+  }
+
+  .catalog-card {
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .catalog-title {
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
+    line-height: 1.2;
   }
 
-  .mcp-path {
+  .catalog-meta {
+    margin-top: 8px;
+    color: var(--muted);
     font-size: 12px;
-    color: var(--text2);
-    margin-top: 4px;
-    font-family: "SF Mono", "Menlo", monospace;
-    word-break: break-all;
+    line-height: 1.4;
+    word-break: break-word;
   }
 
-  .mcp-status {
+  .catalog-links {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .catalog-links a {
+    color: #9bd1ff;
     font-size: 12px;
-    font-weight: 500;
-    padding: 3px 10px;
-    border-radius: 6px;
-    white-space: nowrap;
+    text-decoration: none;
   }
 
-  .mcp-found { background: rgba(34,197,94,0.15); color: var(--green); }
-  .mcp-notfound { background: rgba(239,68,68,0.1); color: var(--red); opacity: 0.6; }
-  .mcp-has-servers { background: rgba(59,130,246,0.15); color: var(--accent); }
+  .catalog-links a:hover {
+    text-decoration: underline;
+  }
 
-  .mcp-servers {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
+  .mcp-card:hover,
+  .history-card:hover {
+    border-color: rgba(91, 183, 255, 0.16);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .mcp-card-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .modal-root {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
     display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(5, 10, 17, 0.68);
+    backdrop-filter: blur(4px);
   }
 
-  .mcp-servers.open { display: block; }
-
-  .mcp-server {
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 6px;
-    font-size: 13px;
+  .modal-root.open {
+    display: flex;
   }
 
-  .mcp-server-name {
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: var(--accent);
+  .modal-card {
+    width: min(760px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+    border-radius: 22px;
+    border: 1px solid var(--line);
+    background: linear-gradient(155deg, rgba(16, 31, 50, 0.98), rgba(8, 17, 30, 0.97));
+    padding: 20px;
   }
 
-  .mcp-server-cmd {
-    font-family: "SF Mono", "Menlo", monospace;
-    font-size: 12px;
-    color: var(--text2);
-    word-break: break-all;
+  .modal-title {
+    font-size: 24px;
+    letter-spacing: -0.03em;
   }
 
-  .mcp-error {
-    color: var(--red);
-    font-size: 12px;
+  .modal-copy {
     margin-top: 6px;
-  }
-
-  .expand-icon {
-    color: var(--text2);
-    font-size: 14px;
-    transition: transform 0.15s;
-  }
-
-  .loading {
-    text-align: center;
-    padding: 40px;
-    color: var(--text2);
-    font-size: 14px;
-  }
-
-  .spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .empty-state {
-    text-align: center;
-    padding: 24px;
-    color: var(--text2);
+    color: var(--muted);
     font-size: 13px;
-    background: var(--surface);
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
+  }
+
+  .form-grid {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .form-grid .full {
+    grid-column: 1 / -1;
+  }
+
+  .form-grid label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  textarea.field {
+    min-height: 92px;
+    resize: vertical;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 1.45;
+  }
+
+  .modal-actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .prefill-box {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(91, 183, 255, 0.3);
+    background: rgba(91, 183, 255, 0.08);
+    color: #d8eaff;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .empty {
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 32px 22px;
+    text-align: center;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.015);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .empty-icon {
+    display: block;
+    margin: 0 auto 10px;
+    font-size: 28px;
+    opacity: 0.5;
+  }
+
+  .footer-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @media (max-width: 1320px) {
+    .controls-card {
+      min-height: 220px;
+    }
+
+    .controls-top {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .controls-top .field {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 1180px) {
+    .hero,
+    .panel-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .drift-summary {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mcp-studio-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .controls-top {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .controls-top .field {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .page-shell {
+      padding: 14px 14px 40px;
+    }
+
+    .hero-copy,
+    .hero-side,
+    .section-shell,
+    .coverage-shell {
+      border-radius: 22px;
+    }
+
+    .hero-copy {
+      padding: 22px;
+    }
+
+    .hero-copy h1 {
+      max-width: none;
+      font-size: 2.4rem;
+    }
+
+    .controls-top,
+    .summary-grid,
+    .drift-summary,
+    .logo-cloud,
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .btn {
+      min-width: 0;
+    }
+
+    .btn,
+    .field,
+    select {
+      width: 100%;
+    }
+
+    .section-header {
+      align-items: stretch;
+    }
+
+    .filters {
+      width: 100%;
+    }
+
+    .filters select {
+      flex: 1 1 100%;
+    }
   }
 </style>
 </head>
 <body>
+<div class="page-shell">
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">AI Stack Control Plane</div>
+      <h1>Your AI workspace, resolved at a glance.</h1>
+      <p>
+        A calmer, sharper read on your editors, coding agents, MCP surfaces, and drift so overlap,
+        breakage, and blind spots feel obvious the moment the page loads.
+      </p>
+      <div class="hero-strip" id="hero-strip"></div>
+    </div>
 
-<header>
-  <h1>Developer Dashboard</h1>
-  <div class="header-right">
-    <span id="status">Loading...</span>
-    <button class="btn" id="refresh-btn" onclick="loadDashboard()">Refresh</button>
-  </div>
-</header>
+    <div class="hero-side">
+      <div class="controls-card">
+        <div class="controls-top">
+          <input id="token-input" class="field" placeholder="Remote access token">
+          <button class="btn primary" id="scan-btn">Run Scan Now</button>
+          <button class="btn" id="refresh-btn">Refresh</button>
+          <button class="btn secondary" id="export-btn">Export</button>
+        </div>
+        <div class="status">
+          <div class="status-chip"><strong>Status</strong><span id="status">Starting...</span></div>
+          <div class="status-chip"><strong>Machine</strong><span id="machine-name">-</span></div>
+          <div class="status-chip"><strong>Auto Refresh</strong><span>30s</span></div>
+        </div>
+      </div>
 
-<div class="section">
-  <div class="section-header">
-    <h2>IDEs & Editors</h2>
-    <span class="count-badge" id="ides-count">...</span>
-  </div>
-  <div class="grid" id="ides-grid">
-    <div class="loading"><span class="spinner"></span> Scanning...</div>
-  </div>
+      <div class="visual-card">
+        <div class="visual-topline">
+          <div class="visual-kicker">Live Surface</div>
+          <div class="scan-id" id="scan-badge">Scan #-</div>
+        </div>
+        <h2 class="visual-headline">Detected stack, visualized with real brand marks.</h2>
+        <p class="visual-copy">
+          Logos are loaded from the web when available so the dashboard feels like an actual tooling atlas,
+          not a generic admin screen.
+        </p>
+        <div class="logo-cloud" id="hero-cloud"></div>
+        <div class="visual-metrics">
+          <div class="metric-card">
+            <span>IDEs</span>
+            <strong id="hero-ides">0</strong>
+          </div>
+          <div class="metric-card">
+            <span>Agents</span>
+            <strong id="hero-llms">0</strong>
+          </div>
+          <div class="metric-card">
+            <span>MCP</span>
+            <strong id="hero-mcp">0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="summary-grid">
+    <article class="summary-card">
+      <span>Total Issues</span>
+      <strong id="summary-total">0</strong>
+      <em>All issue severities for the current scan</em>
+    </article>
+    <article class="summary-card">
+      <span>Critical Issues</span>
+      <strong id="summary-critical">0</strong>
+      <em>Failures worth fixing before sharing configs</em>
+    </article>
+    <article class="summary-card">
+      <span>Configs Scanned</span>
+      <strong id="summary-configs">0</strong>
+      <em>Global and project MCP locations discovered</em>
+    </article>
+    <article class="summary-card">
+      <span>MCP Conflicts</span>
+      <strong id="summary-conflicts">0</strong>
+      <em>Duplicate names or global/project drift</em>
+    </article>
+  </section>
+
+  <section class="panel-grid">
+    <div class="section-shell">
+      <div class="section-header">
+        <div class="section-heading">
+          <h2>Issues</h2>
+          <p>Config conflicts, missing binaries, and drift detected by the rule engine.</p>
+        </div>
+        <span class="count" id="issues-count">0 shown</span>
+      </div>
+      <div class="filters">
+        <select id="filter-severity">
+          <option value="">All Severities</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <select id="filter-type">
+          <option value="">All Types</option>
+        </select>
+        <select id="filter-source">
+          <option value="">All Sources</option>
+        </select>
+      </div>
+      <div class="issue-list" id="issues-list"></div>
+    </div>
+
+    <div class="section-shell">
+      <div class="section-header">
+        <div class="section-heading">
+          <h2>Drift</h2>
+          <p>What changed since the previous snapshot.</p>
+        </div>
+        <span class="count" id="drift-count">0 changes</span>
+      </div>
+      <div class="drift-summary" id="drift-summary"></div>
+      <div class="drift-list" id="drift-list"></div>
+    </div>
+  </section>
+
+  <section class="section-shell">
+    <div class="section-header">
+      <div class="section-heading">
+        <h2>IDEs & Editors</h2>
+        <p>The workbench layer on this machine.</p>
+      </div>
+      <span class="count" id="ides-count">0 found</span>
+    </div>
+    <div class="grid" id="ides-grid"></div>
+  </section>
+
+  <section class="section-shell">
+    <div class="section-header">
+      <div class="section-heading">
+        <h2>LLMs & Coding Agents</h2>
+        <p>Desktop apps, CLIs, models, and extensions in one visual layer.</p>
+      </div>
+      <span class="count" id="llms-count">0 found</span>
+    </div>
+    <div class="grid" id="llms-grid"></div>
+  </section>
+
+  <section class="section-shell">
+    <div class="section-header">
+      <div class="section-heading">
+        <h2>MCP Studio</h2>
+        <p>Add, edit, and remove MCP servers safely, then explore recently updated MCPs from the official registry.</p>
+      </div>
+      <span class="count" id="mcp-count">0 locations</span>
+    </div>
+    <div class="mcp-studio-grid">
+      <div class="studio-pane">
+        <div class="studio-head">
+          <div>
+            <div class="history-title">Configured MCPs</div>
+            <div class="studio-subtitle">Detected local config targets and current server definitions.</div>
+          </div>
+          <div class="studio-actions">
+            <button class="btn small primary" id="mcp-add-btn">Add MCP</button>
+          </div>
+        </div>
+        <div class="mcp-list" id="mcp-list"></div>
+      </div>
+      <div class="studio-pane">
+        <div class="studio-head">
+          <div>
+            <div class="history-title">All MCPs</div>
+            <div class="studio-subtitle" id="catalog-meta">Official registry feed</div>
+          </div>
+          <div class="studio-actions">
+            <button class="btn small" id="catalog-refresh-btn">Refresh Feed</button>
+          </div>
+        </div>
+        <input class="field catalog-search" id="catalog-search" placeholder="Search title, name, description">
+        <div class="catalog-list" id="catalog-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-shell">
+    <div class="section-header">
+      <div class="section-heading">
+        <h2>Scan History</h2>
+        <p>Recent snapshots with issue trend context.</p>
+      </div>
+      <span class="count" id="history-count">0 scans</span>
+    </div>
+    <div class="history-list" id="history-list"></div>
+  </section>
+
+  <section class="coverage-shell">
+    <div class="section-header">
+      <div class="section-heading">
+        <h2>Ecosystem Coverage</h2>
+        <p>An image-led footer band built from the tools actually detected on this machine.</p>
+      </div>
+      <span class="count" id="coverage-count">0 brands</span>
+    </div>
+    <p class="support-copy">
+      Brand marks are pulled live from Simple Icons CDN when available and gracefully fall back to initials when they are not.
+    </p>
+    <div class="brand-ribbon" id="brand-ribbon"></div>
+    <div class="footer-note">If the UI still looks stale, hard refresh after restarting `python3 dashboard.py` so the no-cache headers take effect.</div>
+  </section>
 </div>
 
-<div class="section">
-  <div class="section-header">
-    <h2>LLMs & Coding Agents</h2>
-    <span class="count-badge" id="llms-count">...</span>
-  </div>
-  <div class="grid" id="llms-grid">
-    <div class="loading"><span class="spinner"></span> Scanning...</div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="section-header">
-    <h2>MCP Configurations</h2>
-    <span class="count-badge" id="mcp-count">...</span>
-  </div>
-  <div class="mcp-list" id="mcp-list">
-    <div class="loading"><span class="spinner"></span> Scanning...</div>
+<div class="modal-root" id="mcp-modal">
+  <div class="modal-card">
+    <h3 class="modal-title" id="mcp-modal-title">Add MCP Server</h3>
+    <p class="modal-copy">Write changes safely with backup + atomic replace, then auto-scan for updated issues and drift.</p>
+    <div class="prefill-box" id="mcp-prefill" style="display:none;"></div>
+    <div class="form-grid">
+      <div class="full">
+        <label for="mcp-target">Target Config</label>
+        <select id="mcp-target"></select>
+      </div>
+      <div>
+        <label for="mcp-name">Server Name</label>
+        <input id="mcp-name" class="field" placeholder="filesystem">
+      </div>
+      <div>
+        <label for="mcp-command">Command</label>
+        <input id="mcp-command" class="field" placeholder="npx">
+      </div>
+      <div class="full">
+        <label for="mcp-args">Args (one per line)</label>
+        <textarea id="mcp-args" class="field" placeholder="mcp-remote@latest&#10;https://example.com/mcp"></textarea>
+      </div>
+      <div class="full">
+        <label for="mcp-env">Env (KEY=VALUE per line, optional)</label>
+        <textarea id="mcp-env" class="field" placeholder="API_KEY=..."></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="mcp-cancel-btn">Cancel</button>
+      <button class="btn primary" id="mcp-save-btn">Save MCP</button>
+    </div>
   </div>
 </div>
 
 <script>
-const ICON_LABELS = {
-  vscode: 'VS', cursor: 'Cu', claude: 'Cl', codex: 'Cx',
-  xcode: 'Xc', jetbrains: 'JB', sublime: 'ST', zed: 'Ze',
-  terminal: '>', ollama: 'OL', aider: 'Ai', openai: 'AI',
-  extension: 'Ex', model: 'ML', process: '!', github: 'GH',
-  windsurf: 'WS', lmstudio: 'LM', nova: 'Nv', android: 'AS',
-  atom: 'At', goose: 'Go', opencode: 'OC', default: '?'
+// All icons served locally from /icons/ for reliability
+const _I = (name) => `/icons/${name}.svg`;
+
+const ICON_URLS = {
+  // IDEs & Editors
+  vscode:      _I("vscode"),
+  cursor:      _I("cursor"),
+  xcode:       _I("xcode"),
+  sublime:     _I("sublime"),
+  zed:         _I("zed"),
+  windsurf:    _I("windsurf"),
+  android:     _I("android"),
+  warp:        _I("warp"),
+  vim:         _I("vim"),
+  neovim:      _I("neovim"),
+  emacs:       _I("emacs"),
+  // JetBrains
+  jetbrains:   _I("jetbrains"),
+  intellij:    _I("intellij"),
+  pycharm:     _I("pycharm"),
+  webstorm:    _I("webstorm"),
+  goland:      _I("goland"),
+  clion:       _I("clion"),
+  rider:       _I("rider"),
+  datagrip:    _I("datagrip"),
+  // AI / LLM
+  claude:      _I("anthropic"),
+  anthropic:   _I("anthropic"),
+  gemini:      _I("gemini"),
+  ollama:      _I("ollama"),
+  copilot:     _I("copilot"),
+  github:      _I("github"),
+  openai:      _I("openai"),
+  chatgpt:     _I("openai"),
+  codex:       _I("openai"),
+  sourcegraph: _I("sourcegraph"),
+  cline:       _I("cline"),
+  codeium:     _I("codeium"),
+  go:          _I("go"),
 };
 
-function iconClass(icon) {
-  return `icon-${icon || 'default'}`;
+// No icons need CSS inversion — all local SVGs have proper fill colors.
+
+let activeScanId = null;
+let currentIssues = [];
+let lastDashboardPayload = null;
+let mcpTargets = [];
+let catalogItems = [];
+let catalogMeta = {};
+let mcpEditContext = null;
+
+function esc(value) {
+  const div = document.createElement("div");
+  div.textContent = String(value ?? "");
+  return div.innerHTML;
 }
 
-function iconLabel(icon) {
-  return ICON_LABELS[icon] || ICON_LABELS.default;
+function tokenValue() {
+  return (document.getElementById("token-input").value || "").trim();
 }
 
-function badgeFor(status, running) {
-  if (running) return '<span class="badge badge-running">Running</span>';
-  if (status === 'running') return '<span class="badge badge-process">Running</span>';
-  if (status === 'installed') return '<span class="badge badge-installed">Installed</span>';
-  if (status === 'available') return '<span class="badge badge-available">Available</span>';
-  if (status === 'downloaded') return '<span class="badge badge-available">Downloaded</span>';
-  return '';
+function iconFromName(name) {
+  const lowered = String(name || "").toLowerCase();
+  // IDEs & Editors
+  if (lowered.includes("visual studio code") || lowered.includes("vs code") || lowered.includes("vscode")) return "vscode";
+  if (lowered.includes("cursor")) return "cursor";
+  if (lowered.includes("xcode")) return "xcode";
+  if (lowered.includes("sublime")) return "sublime";
+  if (lowered.includes("zed")) return "zed";
+  if (lowered.includes("windsurf")) return "windsurf";
+  if (lowered.includes("android studio")) return "android";
+  if (lowered.includes("warp")) return "warp";
+  if (lowered.includes("neovim") || lowered.includes("nvim")) return "neovim";
+  if (lowered.includes("vim")) return "vim";
+  if (lowered.includes("emacs")) return "emacs";
+  // JetBrains — specific products first, then generic
+  if (lowered.includes("pycharm")) return "pycharm";
+  if (lowered.includes("webstorm")) return "webstorm";
+  if (lowered.includes("goland")) return "goland";
+  if (lowered.includes("clion")) return "clion";
+  if (lowered.includes("rider")) return "rider";
+  if (lowered.includes("datagrip")) return "datagrip";
+  if (lowered.includes("intellij")) return "intellij";
+  if (lowered.includes("rustrover")) return "jetbrains";
+  if (lowered.includes("fleet")) return "jetbrains";
+  if (lowered.includes("jetbrains")) return "jetbrains";
+  // AI / LLM
+  if (lowered.includes("anthropic.claude") || lowered.includes("claude")) return "claude";
+  if (lowered.includes("anthropic")) return "anthropic";
+  if (lowered.includes("copilot")) return "copilot";
+  if (lowered.includes("openai")) return "openai";
+  if (lowered.includes("chatgpt")) return "chatgpt";
+  if (lowered.includes("codex")) return "codex";
+  if (lowered.includes("gemini")) return "gemini";
+  if (lowered.includes("ollama")) return "ollama";
+  if (lowered.includes("sourcegraph")) return "sourcegraph";
+  if (lowered.includes("cody")) return "sourcegraph";
+  if (lowered.includes("cline")) return "cline";
+  if (lowered.includes("codeium")) return "codeium";
+  if (lowered.includes("roo")) return "cline";
+  if (lowered.includes("github")) return "github";
+  return "default";
 }
 
-function renderIDEs(ides) {
-  const grid = document.getElementById('ides-grid');
-  document.getElementById('ides-count').textContent = ides.length + ' found';
+function initials(label) {
+  return String(label || "?")
+    .split(/[\s._-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join("") || "?";
+}
 
-  if (!ides.length) {
-    grid.innerHTML = '<div class="empty-state">No IDEs detected</div>';
+function logoUrl(icon) {
+  return ICON_URLS[icon] || "";
+}
+
+function logoMarkup(icon, label, sizeClass = "") {
+  const resolvedIcon = icon || iconFromName(label);
+  const url = logoUrl(resolvedIcon);
+  const classes = ["logo-mark"];
+  if (sizeClass) classes.push(sizeClass);
+  if (!url) classes.push("no-image");
+
+  const initText = esc(initials(label));
+  if (!url) {
+    return `<div class="${classes.join(" ")}"><span class="logo-fallback" style="display:flex">${initText}</span></div>`;
+  }
+
+  return `
+    <div class="${classes.join(" ")}">
+      <img
+        src="${url}"
+        alt="${esc(label)}"
+        loading="lazy"
+        onerror="this.remove(); this.parentElement.querySelector('.logo-fallback').style.display='flex';"
+      >
+      <span class="logo-fallback">${initText}</span>
+    </div>
+  `;
+}
+
+function formatTime(value) {
+  if (!value) return "Unknown";
+  try {
+    return new Date(value).toLocaleString();
+  } catch (err) {
+    return String(value);
+  }
+}
+
+function setStatus(text) {
+  document.getElementById("status").textContent = text;
+}
+
+function setMachineName(name) {
+  document.getElementById("machine-name").textContent = name || "-";
+}
+
+function chipMarkup(text, tone = "") {
+  return `<span class="chip ${tone}">${esc(text)}</span>`;
+}
+
+function detailChips(details) {
+  const items = [];
+  const safeDetails = details || {};
+  const orderedKeys = ["path", "command", "server", "scope", "project"];
+
+  orderedKeys.forEach((key) => {
+    if (safeDetails[key]) {
+      items.push(`<span class="detail-chip">${esc(key)}: ${esc(safeDetails[key])}</span>`);
+    }
+  });
+
+  return items.slice(0, 5).join("");
+}
+
+function renderHero(payload) {
+  const ides = payload.ides || [];
+  const llms = payload.llms || [];
+  const mcp = payload.mcp || [];
+  const summary = payload.issues_summary || {};
+  const combined = [...ides, ...llms].slice(0, 6);
+
+  document.getElementById("scan-badge").textContent = `Scan #${payload.scan_id || "-"}`;
+  document.getElementById("hero-ides").textContent = ides.length;
+  document.getElementById("hero-llms").textContent = llms.length;
+  document.getElementById("hero-mcp").textContent = mcp.length;
+
+  const strip = document.getElementById("hero-strip");
+  strip.innerHTML = [
+    { label: "Tooling Found", value: ides.length + llms.length, meta: "editors and agents" },
+    { label: "Configs", value: summary.configs_scanned ?? 0, meta: "MCP surfaces" },
+    { label: "Critical", value: summary.critical ?? 0, meta: "needs attention" }
+  ].map((item) => `
+    <div class="hero-pill">
+      <div class="hero-pill-main">
+        <strong>${esc(item.value)}</strong>
+        <span>${esc(item.label)}</span>
+      </div>
+      <div class="hero-pill-meta">${esc(item.meta)}</div>
+    </div>
+  `).join("");
+
+  const cloud = document.getElementById("hero-cloud");
+  if (!combined.length) {
+    cloud.innerHTML = '<div class="empty">No tools detected yet.</div>';
     return;
   }
 
-  grid.innerHTML = ides.map(ide => `
-    <div class="card ${ide.running ? 'card-active' : ''}">
-      <div class="card-icon ${iconClass(ide.icon)}">${iconLabel(ide.icon)}</div>
-      <div class="card-title">${esc(ide.name)}</div>
-      <div class="card-detail">${esc(ide.version || '')}</div>
-      ${badgeFor(null, ide.running)}
-      <div class="card-type">${esc(ide.type)}</div>
+  cloud.innerHTML = combined.map((item, index) => `
+    <div class="brand-card" style="animation-delay:${index * 0.18}s;">
+      ${logoMarkup(item.icon || iconFromName(item.name), item.name)}
+      <strong>${esc(item.name)}</strong>
+      <span>${esc(item.type || item.status || "tool")}</span>
     </div>
-  `).join('');
+  `).join("");
 }
 
-function renderLLMs(llms) {
-  const grid = document.getElementById('llms-grid');
-  document.getElementById('llms-count').textContent = llms.length + ' found';
+function renderSummary(summary = {}) {
+  document.getElementById("summary-total").textContent = summary.total ?? 0;
+  document.getElementById("summary-critical").textContent = summary.critical ?? 0;
+  document.getElementById("summary-configs").textContent = summary.configs_scanned ?? 0;
+  document.getElementById("summary-conflicts").textContent = summary.conflicts ?? 0;
+}
 
-  if (!llms.length) {
-    grid.innerHTML = '<div class="empty-state">No LLMs or coding agents detected</div>';
-    return;
-  }
+function renderToolCard(item, fallbackType) {
+  const metaLine = item.host ? `Host: ${item.host}` : (item.version || "Version unavailable");
+  const pathLine = item.path || "";
+  const icon = item.icon || iconFromName(item.name);
+  const chips = [];
 
-  grid.innerHTML = llms.map(l => `
-    <div class="card">
-      <div class="card-icon ${iconClass(l.icon)}">${iconLabel(l.icon)}</div>
-      <div class="card-title">${esc(l.name)}</div>
-      <div class="card-detail">${esc(l.version || '')}</div>
-      ${l.host ? `<div class="card-detail">Host: ${esc(l.host)}</div>` : ''}
-      ${badgeFor(l.status)}
-      <div class="card-type">${esc(l.type)}</div>
-    </div>
-  `).join('');
+  if (item.running) chips.push(chipMarkup("Running", "ok"));
+  if (item.status === "installed") chips.push(chipMarkup("Installed", "accent"));
+  if (item.status === "available" || item.status === "downloaded") chips.push(chipMarkup(item.status, "warn"));
+  chips.push(chipMarkup(item.type || fallbackType || "tool"));
+
+  return `
+    <article class="tool-card">
+      <div class="tool-top">
+        ${logoMarkup(icon, item.name)}
+        <div class="tool-text">
+          <div class="tool-name">${esc(item.name)}</div>
+          <div class="tool-meta">${esc(metaLine)}</div>
+        </div>
+      </div>
+      ${pathLine ? `<div class="tool-path">${esc(pathLine)}</div>` : ""}
+      <div class="chip-row">${chips.join("")}</div>
+    </article>
+  `;
+}
+
+function renderIDEs(items) {
+  document.getElementById("ides-count").textContent = `${items.length} found`;
+  const grid = document.getElementById("ides-grid");
+  grid.innerHTML = items.length
+    ? items.map((item) => renderToolCard(item, "ide")).join("")
+    : '<div class="empty">No IDEs or editors detected on this machine.</div>';
+}
+
+function renderLLMs(items) {
+  document.getElementById("llms-count").textContent = `${items.length} found`;
+  const grid = document.getElementById("llms-grid");
+  grid.innerHTML = items.length
+    ? items.map((item) => renderToolCard(item, "agent")).join("")
+    : '<div class="empty">No LLM apps, CLIs, extensions, or local models detected.</div>';
 }
 
 function renderMCP(configs) {
-  const list = document.getElementById('mcp-list');
-  const totalServers = configs.reduce((sum, c) => sum + (c.serverCount || 0), 0);
-  document.getElementById('mcp-count').textContent =
-    configs.length + ' locations, ' + totalServers + ' servers';
+  document.getElementById("mcp-count").textContent = `${configs.length} locations`;
+  const list = document.getElementById("mcp-list");
 
   if (!configs.length) {
-    list.innerHTML = '<div class="empty-state">No MCP configuration locations found</div>';
+    list.innerHTML = '<div class="empty">No MCP configuration files were found.</div>';
     return;
   }
 
-  list.innerHTML = configs.map((cfg, i) => {
-    let statusClass = 'mcp-notfound';
-    let statusText = 'Not found';
-    if (cfg.exists && cfg.serverCount > 0) {
-      statusClass = 'mcp-has-servers';
-      statusText = cfg.serverCount + ' server' + (cfg.serverCount !== 1 ? 's' : '');
-    } else if (cfg.exists) {
-      statusClass = 'mcp-found';
-      statusText = 'No servers';
-    }
+  list.innerHTML = configs.map((config) => {
+    const status = config.serverCount > 0
+      ? `${config.serverCount} server${config.serverCount === 1 ? "" : "s"}`
+      : (config.exists ? "No servers" : "Not found");
 
-    const serversHtml = cfg.servers && cfg.servers.length
-      ? cfg.servers.map(s => `
-          <div class="mcp-server">
-            <div class="mcp-server-name">${esc(s.name)}</div>
-            <div class="mcp-server-cmd">${esc(s.command)}${s.args && s.args.length ? ' ' + s.args.map(esc).join(' ') : ''}</div>
-            ${s.env && s.env.length ? `<div class="mcp-server-cmd">env: ${s.env.map(esc).join(', ')}</div>` : ''}
-            ${s.project ? `<div class="mcp-server-cmd">project: ${esc(s.project)}</div>` : ''}
-          </div>
-        `).join('')
-      : '<div style="color:var(--text2);font-size:12px;">No MCP servers configured</div>';
+    const serverBits = (config.servers || []).slice(0, 12).map((server) => `
+      <div class="server-chip">
+        <span>${esc(server.name)} → ${esc(server.command || "(empty)")}</span>
+        <button
+          class="btn small"
+          data-action="edit-mcp"
+          data-target-path="${esc(config.path || "")}"
+          data-target-key="${esc(config.key || "")}"
+          data-server-name="${esc(server.name || "")}"
+          data-server-command="${esc(server.command || "")}"
+          data-server-args="${esc(JSON.stringify(server.args || []))}"
+        >
+          Edit
+        </button>
+        <button
+          class="btn small danger"
+          data-action="delete-mcp"
+          data-target-path="${esc(config.path || "")}"
+          data-target-key="${esc(config.key || "")}"
+          data-server-name="${esc(server.name || "")}"
+        >
+          Delete
+        </button>
+      </div>
+    `).join("");
 
     return `
-      <div class="mcp-card">
-        <div class="mcp-header" onclick="toggleMcp(${i})">
-          <div>
-            <div class="mcp-name">${esc(cfg.name)}</div>
-            <div class="mcp-path">${esc(cfg.path.replace('${location.origin}', '').replace(/^.*Users\/[^/]+/, '~'))}</div>
+      <article class="mcp-card">
+        <div class="mcp-top">
+          <div class="tool-top">
+            ${logoMarkup(iconFromName(config.name), config.name, "small")}
+            <div class="tool-text">
+              <div class="mcp-title">${esc(config.name)}</div>
+              <div class="mcp-meta">${esc(status)}</div>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span class="mcp-status ${statusClass}">${statusText}</span>
-            <span class="expand-icon" id="expand-${i}">&#9654;</span>
-          </div>
+          <span class="count">${esc(config.scope || "unknown")}</span>
         </div>
-        ${cfg.error ? `<div class="mcp-error">${esc(cfg.error)}</div>` : ''}
-        <div class="mcp-servers" id="mcp-servers-${i}">
-          ${serversHtml}
+        <div class="command-line">${esc(config.path || "")}</div>
+        ${config.error ? `<div class="mcp-meta">Error: ${esc(config.error)}</div>` : ""}
+        <div class="mcp-meta">Key: ${esc(config.key || "mcpServers")}</div>
+        <div class="server-row">${serverBits || '<span class="server-chip">No MCP servers configured</span>'}</div>
+        <div class="mcp-card-actions">
+          <button
+            class="btn small primary"
+            data-action="add-mcp-inline"
+            data-target-path="${esc(config.path || "")}"
+            data-target-key="${esc(config.key || "")}"
+          >
+            Add Here
+          </button>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  list.querySelectorAll("[data-action='add-mcp-inline']").forEach((button) => {
+    button.addEventListener("click", () => {
+      const targetPath = button.getAttribute("data-target-path") || "";
+      const targetKey = button.getAttribute("data-target-key") || "";
+      openMcpModal({
+        mode: "add",
+        targetPath,
+        targetKey,
+      });
+    });
+  });
+
+  list.querySelectorAll("[data-action='edit-mcp']").forEach((button) => {
+    button.addEventListener("click", () => {
+      const argsRaw = button.getAttribute("data-server-args") || "[]";
+      let args = [];
+      try {
+        args = JSON.parse(argsRaw);
+      } catch (err) {
+        args = [];
+      }
+
+      openMcpModal({
+        mode: "edit",
+        targetPath: button.getAttribute("data-target-path") || "",
+        targetKey: button.getAttribute("data-target-key") || "",
+        oldName: button.getAttribute("data-server-name") || "",
+        name: button.getAttribute("data-server-name") || "",
+        command: button.getAttribute("data-server-command") || "",
+        args,
+      });
+    });
+  });
+
+  list.querySelectorAll("[data-action='delete-mcp']").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const name = button.getAttribute("data-server-name") || "";
+      const targetPath = button.getAttribute("data-target-path") || "";
+      const targetKey = button.getAttribute("data-target-key") || "";
+      const confirmed = window.confirm(`Delete MCP server '${name}' from this target?`);
+      if (!confirmed) return;
+      await deleteMcpServer({ targetPath, targetKey, name });
+    });
+  });
+}
+
+function parseArgsInput(value) {
+  return String(value || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function parseEnvInput(value) {
+  const result = {};
+  const lines = String(value || "").split("\n");
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed || !trimmed.includes("=")) return;
+    const idx = trimmed.indexOf("=");
+    const key = trimmed.slice(0, idx).trim();
+    const val = trimmed.slice(idx + 1).trim();
+    if (key) result[key] = val;
+  });
+  return result;
+}
+
+function refreshMcpTargetOptions(preferredPath = "") {
+  const select = document.getElementById("mcp-target");
+  if (!select) return;
+
+  select.innerHTML = mcpTargets.map((target) => `
+    <option value="${esc(target.path)}" data-key="${esc(target.key)}">
+      ${esc(target.name)} · ${esc(target.scope)} · ${esc(target.path)}
+    </option>
+  `).join("");
+
+  if (!mcpTargets.length) return;
+
+  if (preferredPath && mcpTargets.some((target) => target.path === preferredPath)) {
+    select.value = preferredPath;
+    return;
+  }
+
+  const preferred = mcpTargets.find((target) => target.is_default) || mcpTargets[0];
+  select.value = preferred.path;
+}
+
+async function loadMcpTargets() {
+  const response = await safeJson("/api/mcp/targets");
+  if (!response.ok) {
+    mcpTargets = [];
+    refreshMcpTargetOptions();
+    return;
+  }
+  mcpTargets = response.data.targets || [];
+  refreshMcpTargetOptions(response.data.default_target_path || "");
+}
+
+function catalogFiltered() {
+  const query = (document.getElementById("catalog-search").value || "").trim().toLowerCase();
+  if (!query) return catalogItems;
+  return catalogItems.filter((item) => {
+    const haystack = [
+      item.server_name,
+      item.title,
+      item.description,
+      item.repo_url,
+      item.website_url,
+    ].join(" ").toLowerCase();
+    return haystack.includes(query);
+  });
+}
+
+function renderCatalog(items, meta = {}) {
+  const list = document.getElementById("catalog-list");
+  const details = [
+    `source: ${meta.source || "unknown"}`,
+    `${items.length} items`,
+    meta.cache ? `cache: ${meta.cache}` : "",
+  ].filter(Boolean).join(" · ");
+  document.getElementById("catalog-meta").textContent = details;
+
+  if (!items.length) {
+    list.innerHTML = '<div class="empty">No MCP catalog entries were returned.</div>';
+    return;
+  }
+
+  list.innerHTML = items.map((item) => `
+    <article class="catalog-card">
+      <div class="tool-top">
+        ${catalogLogoMarkup(item)}
+        <div class="tool-text">
+          <div class="catalog-title">${esc(item.title || item.server_name)}</div>
+          <div class="catalog-meta">${esc(item.server_name)}</div>
         </div>
       </div>
-    `;
-  }).join('');
+      ${item.description ? `<div class="catalog-meta">${esc(item.description)}</div>` : ""}
+      <div class="catalog-meta">Updated: ${esc(formatTime(item.updated_at))}${item.status ? ` · ${esc(item.status)}` : ""}</div>
+      <div class="catalog-links">
+        ${item.repo_url ? `<a href="${esc(item.repo_url)}" target="_blank" rel="noopener noreferrer">Repo</a>` : ""}
+        ${item.website_url ? `<a href="${esc(item.website_url)}" target="_blank" rel="noopener noreferrer">Website</a>` : ""}
+      </div>
+      <div class="mcp-card-actions">
+        <button class="btn small primary" data-action="prefill-catalog" data-server="${esc(item.server_name)}">Prefill Add</button>
+      </div>
+    </article>
+  `).join("");
+
+  list.querySelectorAll("[data-action='prefill-catalog']").forEach((button) => {
+    button.addEventListener("click", () => {
+      const serverName = button.getAttribute("data-server") || "";
+      const item = items.find((entry) => entry.server_name === serverName);
+      if (!item) return;
+      const suggestedName = serverName.includes("/") ? serverName.split("/").slice(-1)[0] : serverName;
+      openMcpModal({
+        mode: "add",
+        name: suggestedName,
+        command: "",
+        args: [],
+        prefill: item,
+      });
+    });
+  });
 }
 
-function toggleMcp(i) {
-  const el = document.getElementById('mcp-servers-' + i);
-  const icon = document.getElementById('expand-' + i);
-  if (el.classList.contains('open')) {
-    el.classList.remove('open');
-    icon.style.transform = 'rotate(0deg)';
+function catalogLogoMarkup(item) {
+  const label = item.title || item.server_name || "MCP";
+  const iconUrl = String(item.icon_url || "").trim();
+  if (!iconUrl) {
+    return logoMarkup(iconFromName(label), label, "small");
+  }
+
+  return `
+    <div class="logo-mark small">
+      <img
+        src="${esc(iconUrl)}"
+        alt="${esc(label)}"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <span class="logo-fallback">${esc(initials(label))}</span>
+    </div>
+  `;
+}
+
+async function loadMcpCatalog(refresh = false) {
+  const endpoint = `/api/mcp/catalog/new?mode=all&days=14&limit=200${refresh ? "&refresh=1" : ""}`;
+  const response = await safeJson(endpoint);
+  if (!response.ok) {
+    catalogMeta = { source: "unavailable", cache: "error" };
+    renderCatalog([], { cache: "error" });
+    return;
+  }
+  catalogItems = response.data.items || [];
+  catalogMeta = response.data || {};
+  renderCatalog(catalogFiltered(), catalogMeta);
+}
+
+function openMcpModal(context = {}) {
+  const modal = document.getElementById("mcp-modal");
+  mcpEditContext = Object.assign({ mode: "add", args: [] }, context);
+  const isEdit = mcpEditContext.mode === "edit";
+
+  document.getElementById("mcp-modal-title").textContent = isEdit ? "Edit MCP Server" : "Add MCP Server";
+  document.getElementById("mcp-name").value = mcpEditContext.name || "";
+  document.getElementById("mcp-command").value = mcpEditContext.command || "";
+  document.getElementById("mcp-args").value = Array.isArray(mcpEditContext.args) ? mcpEditContext.args.join("\n") : "";
+  document.getElementById("mcp-env").value = "";
+  document.getElementById("mcp-save-btn").textContent = isEdit ? "Save Changes" : "Save MCP";
+
+  refreshMcpTargetOptions(mcpEditContext.targetPath || "");
+  if (mcpEditContext.targetPath) {
+    document.getElementById("mcp-target").value = mcpEditContext.targetPath;
+  }
+
+  const prefill = document.getElementById("mcp-prefill");
+  if (mcpEditContext.prefill) {
+    const item = mcpEditContext.prefill;
+    prefill.style.display = "block";
+    prefill.innerHTML = `
+      Prefill source: <strong>${esc(item.title || item.server_name)}</strong><br>
+      ${item.server_name ? `Server: ${esc(item.server_name)}<br>` : ""}
+      ${item.repo_url ? `Repo: <a href=\"${esc(item.repo_url)}\" target=\"_blank\" rel=\"noopener noreferrer\">${esc(item.repo_url)}</a><br>` : ""}
+      ${item.website_url ? `Website: <a href=\"${esc(item.website_url)}\" target=\"_blank\" rel=\"noopener noreferrer\">${esc(item.website_url)}</a>` : ""}
+    `;
   } else {
-    el.classList.add('open');
-    icon.style.transform = 'rotate(90deg)';
+    prefill.style.display = "none";
+    prefill.innerHTML = "";
+  }
+
+  modal.classList.add("open");
+}
+
+function closeMcpModal() {
+  document.getElementById("mcp-modal").classList.remove("open");
+  mcpEditContext = null;
+}
+
+async function saveMcpFromModal() {
+  if (!mcpEditContext) return;
+  const targetPath = (document.getElementById("mcp-target").value || "").trim();
+  const name = (document.getElementById("mcp-name").value || "").trim();
+  const command = (document.getElementById("mcp-command").value || "").trim();
+  const args = parseArgsInput(document.getElementById("mcp-args").value);
+  const env = parseEnvInput(document.getElementById("mcp-env").value);
+
+  if (!targetPath) {
+    setStatus("Select a target config before saving.");
+    return;
+  }
+  if (!name || !command) {
+    setStatus("Server name and command are required.");
+    return;
+  }
+
+  const selectedTarget = mcpTargets.find((target) => target.path === targetPath);
+  const targetKey = selectedTarget ? selectedTarget.key : (mcpEditContext.targetKey || "mcpServers");
+
+  const payload = {
+    target_path: targetPath,
+    target_key: targetKey,
+    name,
+    command,
+    args,
+    env,
+  };
+
+  const isEdit = mcpEditContext.mode === "edit";
+  if (isEdit) {
+    payload.old_name = mcpEditContext.oldName || mcpEditContext.name || "";
+  }
+
+  const response = await safeJson(
+    "/api/mcp/servers",
+    {
+      method: isEdit ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  if (!response.ok) {
+    setStatus(`Error: MCP save failed (${response.status})`);
+    return;
+  }
+
+  closeMcpModal();
+  await loadDashboard(true);
+  setStatus(`${isEdit ? "Updated" : "Added"} MCP '${name}' in ${targetPath}`);
+}
+
+async function deleteMcpServer({ targetPath, targetKey, name }) {
+  const response = await safeJson(
+    "/api/mcp/servers",
+    {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        target_path: targetPath,
+        target_key: targetKey || "mcpServers",
+        name,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    setStatus(`Error: MCP delete failed (${response.status})`);
+    return;
+  }
+
+  await loadDashboard(true);
+  setStatus(`Deleted MCP '${name}' from ${targetPath}`);
+}
+
+function updateIssueFilters() {
+  const typeEl = document.getElementById("filter-type");
+  const sourceEl = document.getElementById("filter-source");
+  const currentType = typeEl.value;
+  const currentSource = sourceEl.value;
+
+  const types = Array.from(new Set(currentIssues.map((issue) => issue.issue_type).filter(Boolean))).sort();
+  const sources = Array.from(new Set(currentIssues.map((issue) => issue.source).filter(Boolean))).sort();
+
+  typeEl.innerHTML = '<option value="">All Types</option>' + types.map((type) => `<option value="${esc(type)}">${esc(type)}</option>`).join("");
+  sourceEl.innerHTML = '<option value="">All Sources</option>' + sources.map((source) => `<option value="${esc(source)}">${esc(source)}</option>`).join("");
+
+  if (types.includes(currentType)) typeEl.value = currentType;
+  if (sources.includes(currentSource)) sourceEl.value = currentSource;
+}
+
+function filteredIssues() {
+  const severity = document.getElementById("filter-severity").value;
+  const type = document.getElementById("filter-type").value;
+  const source = document.getElementById("filter-source").value;
+
+  return currentIssues.filter((issue) => {
+    if (severity && issue.severity !== severity) return false;
+    if (type && issue.issue_type !== type) return false;
+    if (source && issue.source !== source) return false;
+    return true;
+  });
+}
+
+function renderIssues() {
+  updateIssueFilters();
+
+  const issues = filteredIssues();
+  const list = document.getElementById("issues-list");
+  const countEl = document.getElementById("issues-count");
+  countEl.textContent = issues.length === 0 && currentIssues.length === 0
+    ? "All clear"
+    : `${issues.length} of ${currentIssues.length}`;
+  countEl.style.color = currentIssues.length === 0 ? "var(--ok)" : "";
+
+  if (!issues.length) {
+    const hasFilters = document.getElementById("filter-severity").value
+      || document.getElementById("filter-type").value
+      || document.getElementById("filter-source").value;
+    const hasAny = currentIssues.length > 0;
+
+    if (hasFilters && hasAny) {
+      list.innerHTML = '<div class="empty"><span class="empty-icon">&#x1F50D;</span>No issues match the selected filters.<br>Try adjusting or clearing filters above.</div>';
+    } else {
+      list.innerHTML = '<div class="empty"><span class="empty-icon">&#x2705;</span>All clear — no config issues detected.</div>';
+    }
+    return;
+  }
+
+  list.innerHTML = issues.map((issue) => `
+    <article class="issue-card sev-${esc(issue.severity)}">
+      <div class="issue-top">
+        <div>
+          <div class="issue-title">${esc(issue.message)}</div>
+          <div class="issue-meta">${esc(issue.source)} · ${esc(issue.issue_type)}</div>
+        </div>
+        <span class="severity-pill ${esc(issue.severity)}">${esc(issue.severity)}</span>
+      </div>
+      <div class="detail-row">${detailChips(issue.details)}</div>
+    </article>
+  `).join("");
+}
+
+function renderDrift(drift) {
+  const summary = drift && drift.summary ? drift.summary : null;
+  const summaryEl = document.getElementById("drift-summary");
+  const listEl = document.getElementById("drift-list");
+
+  if (!summary) {
+    document.getElementById("drift-count").textContent = "0 changes";
+    summaryEl.innerHTML = '<div class="empty">No previous scan is available for comparison yet.</div>';
+    listEl.innerHTML = "";
+    return;
+  }
+
+  const changes = drift.changes || [];
+  document.getElementById("drift-count").textContent = `${changes.length} changes`;
+  summaryEl.innerHTML = `
+    <div class="mini"><span>Added Servers</span><strong>${summary.added_servers || 0}</strong></div>
+    <div class="mini"><span>Removed Servers</span><strong>${summary.removed_servers || 0}</strong></div>
+    <div class="mini"><span>New Issues</span><strong>${summary.new_issues || 0}</strong></div>
+    <div class="mini"><span>Resolved Issues</span><strong>${summary.resolved_issues || 0}</strong></div>
+  `;
+
+  if (!changes.length) {
+    listEl.innerHTML = '<div class="empty">No drift changes were detected.</div>';
+    return;
+  }
+
+  listEl.innerHTML = changes.map((change) => `
+    <article class="drift-card">
+      <div class="history-title">${esc(change.change)} ${esc(change.category)}</div>
+      <div class="history-meta">${esc(change.name || "")}${change.source ? ` · ${esc(change.source)}` : ""}</div>
+      ${change.signature ? `<div class="command-line">${esc(change.signature)}</div>` : ""}
+      ${change.message ? `<div class="history-meta">${esc(change.message)}</div>` : ""}
+    </article>
+  `).join("");
+}
+
+function renderHistory(items) {
+  const list = document.getElementById("history-list");
+  document.getElementById("history-count").textContent = `${items.length} scans`;
+
+  if (!items.length) {
+    list.innerHTML = '<div class="empty">No stored scan history yet.</div>';
+    return;
+  }
+
+  list.innerHTML = items.map((item) => `
+    <article class="history-card">
+      <div class="history-top">
+        <div>
+          <div class="history-title">Scan #${esc(item.scan_id)}</div>
+          <div class="history-meta">${esc(formatTime(item.created_at))} · ${esc(item.machine_name)}</div>
+        </div>
+        <span class="count">${esc(item.issue_count)} issues</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-chip">critical: ${esc(item.critical_count)}</span>
+        <span class="detail-chip">hash: ${esc((item.payload_hash || "").slice(0, 12))}</span>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderCoverage(payload) {
+  const items = [...(payload.ides || []), ...(payload.llms || [])];
+  const unique = [];
+  const seen = new Set();
+
+  items.forEach((item) => {
+    const key = `${item.icon || iconFromName(item.name)}:${item.name}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    unique.push(item);
+  });
+
+  const ribbon = document.getElementById("brand-ribbon");
+  document.getElementById("coverage-count").textContent = `${unique.length} brands`;
+
+  ribbon.innerHTML = unique.length
+    ? unique.slice(0, 20).map((item) => `
+        <div class="brand-pill">
+          ${logoMarkup(item.icon || iconFromName(item.name), item.name, "small")}
+          <span>${esc(item.name)}</span>
+        </div>
+      `).join("")
+    : '<div class="empty">Brand coverage will appear here after tools are detected.</div>';
+}
+
+async function apiFetch(path, options = {}) {
+  const headers = Object.assign({}, options.headers || {});
+  const token = tokenValue();
+  if (token) headers["X-DevDash-Token"] = token;
+  return fetch(path, Object.assign({}, options, { headers }));
+}
+
+async function safeJson(path, options = {}) {
+  try {
+    const response = await apiFetch(path, options);
+    if (!response.ok) {
+      return { ok: false, status: response.status };
+    }
+    return { ok: true, data: await response.json() };
+  } catch (error) {
+    return { ok: false, status: 0, error };
   }
 }
 
-function esc(s) {
-  if (!s) return '';
-  const d = document.createElement('div');
-  d.textContent = String(s);
-  return d.innerHTML;
+async function loadIssueData(payload) {
+  if (Array.isArray(payload.issues)) {
+    return payload.issues;
+  }
+
+  const fallback = await safeJson("/api/issues");
+  if (fallback.ok) {
+    return fallback.data.issues || [];
+  }
+  return [];
 }
 
-async function loadDashboard() {
-  const statusEl = document.getElementById('status');
-  const btn = document.getElementById('refresh-btn');
-  statusEl.textContent = 'Scanning...';
-  btn.disabled = true;
+async function loadDashboard(refresh = false) {
+  setStatus("Loading dashboard...");
+  document.getElementById("refresh-btn").disabled = true;
 
   try {
-    const resp = await fetch('/api/all');
-    if (!resp.ok) throw new Error('Server error ' + resp.status);
-    const data = await resp.json();
+    const dashboard = await safeJson(refresh ? "/api/all?refresh=1" : "/api/all");
+    if (!dashboard.ok) {
+      if (dashboard.status === 401) {
+        throw new Error("Unauthorized. Provide the token in the header field.");
+      }
+      throw new Error(`Dashboard API failed with ${dashboard.status || "network error"}`);
+    }
 
-    renderIDEs(data.ides || []);
-    renderLLMs(data.llms || []);
-    renderMCP(data.mcp || []);
+    const payload = dashboard.data;
+    lastDashboardPayload = payload;
+    activeScanId = payload.scan_id;
 
-    const t = new Date(data.timestamp);
-    statusEl.textContent = 'Updated ' + t.toLocaleTimeString();
-  } catch (err) {
-    statusEl.textContent = 'Error: ' + err.message;
+    setMachineName(payload.machine_name);
+    renderHero(payload);
+    renderSummary(payload.issues_summary || {});
+    renderIDEs(payload.ides || []);
+    renderLLMs(payload.llms || []);
+    renderMCP(payload.mcp || []);
+    renderDrift(payload.drift || {});
+    renderCoverage(payload);
+    await loadMcpTargets();
+    if (refresh || !catalogItems.length) {
+      await loadMcpCatalog(refresh);
+    } else {
+      renderCatalog(catalogFiltered(), Object.assign({}, catalogMeta, { cache: "memory" }));
+    }
+
+    currentIssues = await loadIssueData(payload);
+    renderIssues();
+
+    const history = await safeJson("/api/history?limit=8");
+    renderHistory(history.ok ? (history.data.items || []) : []);
+
+    const refreshedAt = payload.timestamp ? new Date(payload.timestamp).toLocaleTimeString() : "unknown time";
+    const notices = [];
+    if (!Array.isArray(payload.issues)) {
+      notices.push("using issues fallback");
+    }
+    if (!history.ok) {
+      notices.push("history unavailable");
+    }
+    setStatus(`Scan #${payload.scan_id} updated at ${refreshedAt}${payload.deduped ? " (deduped)" : ""}${notices.length ? ` · ${notices.join(" · ")}` : ""}`);
+  } catch (error) {
+    setStatus(`Error: ${error.message}`);
   } finally {
-    btn.disabled = false;
+    document.getElementById("refresh-btn").disabled = false;
   }
 }
 
-// Auto-refresh every 30s
-setInterval(loadDashboard, 30000);
+async function runScanNow() {
+  setStatus("Running scan...");
+  document.getElementById("scan-btn").disabled = true;
 
-// Initial load
+  try {
+    const response = await apiFetch("/api/scan", { method: "POST" });
+    if (!response.ok) {
+      throw new Error(`Scan failed with ${response.status}`);
+    }
+    await loadDashboard();
+  } catch (error) {
+    setStatus(`Error: ${error.message}`);
+  } finally {
+    document.getElementById("scan-btn").disabled = false;
+  }
+}
+
+async function exportReport(format) {
+  if (!activeScanId) {
+    setStatus("No scan is loaded yet.");
+    return;
+  }
+
+  try {
+    const endpoint = format === "md"
+      ? `/api/report.md?scan_id=${activeScanId}`
+      : `/api/report.json?scan_id=${activeScanId}`;
+    const response = await apiFetch(endpoint);
+    if (!response.ok) {
+      throw new Error(`Export failed with ${response.status}`);
+    }
+
+    const text = await response.text();
+    const blob = new Blob([text], {
+      type: format === "md" ? "text/markdown" : "application/json"
+    });
+    const href = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = href;
+    anchor.download = `mcpstackstudio-scan-${activeScanId}.${format}`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(href);
+    setStatus(`Exported ${format.toUpperCase()} report for scan #${activeScanId}`);
+  } catch (error) {
+    setStatus(`Error: ${error.message}`);
+  }
+}
+
+async function requestExport() {
+  const choice = window.prompt("Export format? Enter md or json.", "md");
+  if (!choice) {
+    return;
+  }
+
+  const format = choice.trim().toLowerCase();
+  if (format !== "md" && format !== "json") {
+    setStatus("Export cancelled. Use md or json.");
+    return;
+  }
+
+  await exportReport(format);
+}
+
+document.getElementById("refresh-btn").addEventListener("click", () => loadDashboard(true));
+document.getElementById("scan-btn").addEventListener("click", runScanNow);
+document.getElementById("export-btn").addEventListener("click", requestExport);
+document.getElementById("mcp-add-btn").addEventListener("click", () => openMcpModal({ mode: "add" }));
+document.getElementById("catalog-refresh-btn").addEventListener("click", () => loadMcpCatalog(true));
+document.getElementById("catalog-search").addEventListener("input", () => {
+  renderCatalog(catalogFiltered(), Object.assign({}, catalogMeta, { cache: "memory" }));
+});
+document.getElementById("mcp-cancel-btn").addEventListener("click", closeMcpModal);
+document.getElementById("mcp-save-btn").addEventListener("click", saveMcpFromModal);
+document.getElementById("mcp-modal").addEventListener("click", (event) => {
+  if (event.target && event.target.id === "mcp-modal") {
+    closeMcpModal();
+  }
+});
+
+document.getElementById("filter-severity").addEventListener("change", renderIssues);
+document.getElementById("filter-type").addEventListener("change", renderIssues);
+document.getElementById("filter-source").addEventListener("change", renderIssues);
+
+document.getElementById("token-input").addEventListener("change", (event) => {
+  const value = (event.target.value || "").trim();
+  localStorage.setItem("devDashToken", value);
+});
+
+const savedToken = localStorage.getItem("devDashToken") || "";
+document.getElementById("token-input").value = savedToken;
+
+setInterval(loadDashboard, 30000);
 loadDashboard();
 </script>
-
 </body>
 </html>

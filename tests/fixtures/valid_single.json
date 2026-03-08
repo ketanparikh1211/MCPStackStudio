@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "python3",
+      "args": ["-m", "http.server"]
+    }
+  }
+}
