@@ -45,6 +45,47 @@ Open:
 http://127.0.0.1:8420
 ```
 
+## MCP Client Setup (Chrome DevTools + Playwright)
+
+If you use Claude Code locally, add these MCP servers in `.claude/settings.local.json`:
+
+```json
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+This enables browser automation and product snapshot capture flows through MCP tools.
+
+## Product Snapshots
+
+Captured screenshots are stored under `./screenshots/`:
+
+### Full Dashboard
+
+![MCPStackStudio Full Dashboard](screenshots/dashboard-full.png)
+
+### Hero Section
+
+![MCPStackStudio Hero](screenshots/dashboard-hero.png)
+
+### Issues Panel
+
+![MCPStackStudio Issues](screenshots/dashboard-issues.png)
+
+### MCP Studio
+
+![MCPStackStudio MCP Studio](screenshots/dashboard-mcp-studio.png)
+
 ## MCP Studio (Phase 2)
 
 From the dashboard UI you can:
