@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from .models import Issue
+from .rules import FIX_SUGGESTIONS
 from .utils import model_to_dict
 
 
@@ -223,6 +224,7 @@ class SnapshotStore:
                 "source": str(row["source"]),
                 "message": str(row["message"]),
                 "details": json.loads(row["details_json"]),
+                "fix_suggestion": FIX_SUGGESTIONS.get(str(row["issue_type"]), ""),
             }
             for row in rows
         ]

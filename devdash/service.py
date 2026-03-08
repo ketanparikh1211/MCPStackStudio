@@ -103,6 +103,7 @@ class ScanService:
             "source": issue.source,
             "message": issue.message,
             "details": model_to_dict(issue.details),
+            "fix_suggestion": issue.fix_suggestion,
         }
 
     @staticmethod
@@ -245,6 +246,7 @@ class ScanService:
         issues = evaluate_issues(mcp_locations, mcp_servers)
 
         issues_summary = summarize_issues(issues, config_count=len(mcp_locations))
+        issues_summary["total_servers"] = len(mcp_servers)
 
         payload = {
             "created_at": utc_now_iso(),

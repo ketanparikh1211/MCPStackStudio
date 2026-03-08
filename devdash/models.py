@@ -55,6 +55,7 @@ class Issue(BaseModel):
     source: str
     message: str
     details: Dict[str, Any] = Field(default_factory=dict)
+    fix_suggestion: str = ""
 
 
 class ScanSnapshot(BaseModel):

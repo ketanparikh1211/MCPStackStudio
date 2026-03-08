@@ -13,6 +13,29 @@ from .utils import stable_hash
 
 CONFLICT_TYPES = {"duplicate_server_name", "global_project_conflict"}
 
+FIX_SUGGESTIONS: Dict[str, str] = {
+    "mcp_config_parse_error": (
+        "Open the file in your editor and validate the JSON (e.g. run `python3 -m json.tool <path>`). "
+        "Common causes: trailing commas, unquoted keys, or mismatched braces."
+    ),
+    "invalid_command": (
+        "Set a non-empty 'command' value for this server entry in the config file. "
+        "Example: \"command\": \"npx\" with the package name in 'args'."
+    ),
+    "missing_command_binary": (
+        "The executable is not on PATH. Install it (e.g. `npm install -g <package>` for npx-based servers, "
+        "or `brew install <tool>`) and verify with `which <command>`."
+    ),
+    "duplicate_server_name": (
+        "Two or more configs define the same server name with different commands. "
+        "Rename one of the entries or consolidate them into a single config file."
+    ),
+    "global_project_conflict": (
+        "The project-level config overrides the global config with a different command signature. "
+        "Align the commands or remove the duplicate from whichever scope is not authoritative."
+    ),
+}
+
 
 def _build_issue(
     severity: str,
@@ -38,6 +61,7 @@ def _build_issue(
         source=source,
         message=message,
         details=details,
+        fix_suggestion=FIX_SUGGESTIONS.get(issue_type, ""),
     )
 
 
