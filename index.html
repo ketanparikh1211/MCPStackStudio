@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer Dashboard</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --text: #e4e4e7;
+    --text2: #a1a1aa;
+    --accent: #3b82f6;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --purple: #a855f7;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #status {
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--border); }
+  .btn:active { transform: scale(0.97); }
+
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .section-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .count-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover {
+    border-color: #3a3a3a;
+    transform: translateY(-1px);
+  }
+
+  .card-active {
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .card-detail {
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 4px;
+    word-break: break-all;
+  }
+
+  .card-type {
+    font-size: 11px;
+    color: var(--text2);
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  .badge-running { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-installed { background: rgba(59,130,246,0.15); color: var(--accent); }
+  .badge-available { background: rgba(168,85,247,0.15); color: var(--purple); }
+  .badge-process { background: rgba(234,179,8,0.15); color: var(--yellow); }
+
+  /* Icon colors */
+  .icon-vscode { background: #0078d4; color: #fff; }
+  .icon-cursor { background: #000; color: #fff; border: 1px solid var(--border); }
+  .icon-claude { background: #d97706; color: #fff; }
+  .icon-codex { background: #10b981; color: #fff; }
+  .icon-xcode { background: #147efb; color: #fff; }
+  .icon-jetbrains { background: #fe315d; color: #fff; }
+  .icon-sublime { background: #ff9800; color: #fff; }
+  .icon-zed { background: #8b5cf6; color: #fff; }
+  .icon-terminal { background: #27272a; color: #22c55e; border: 1px solid var(--border); }
+  .icon-ollama { background: #fff; color: #000; }
+  .icon-aider { background: #14b8a6; color: #fff; }
+  .icon-openai { background: #000; color: #10a37f; border: 1px solid var(--border); }
+  .icon-extension { background: #6366f1; color: #fff; }
+  .icon-model { background: #8b5cf6; color: #fff; }
+  .icon-process { background: #eab308; color: #000; }
+  .icon-github { background: #fff; color: #000; }
+  .icon-default { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+  .icon-windsurf { background: #06b6d4; color: #fff; }
+  .icon-lmstudio { background: #2563eb; color: #fff; }
+  .icon-nova { background: #6366f1; color: #fff; }
+  .icon-android { background: #3ddc84; color: #000; }
+  .icon-atom { background: #40a02b; color: #fff; }
+  .icon-goose { background: #f97316; color: #fff; }
+  .icon-opencode { background: #06b6d4; color: #fff; }
+
+  /* MCP section */
+  .mcp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mcp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: all 0.15s;
+  }
+  .mcp-card:hover { border-color: #3a3a3a; }
+
+  .mcp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .mcp-name {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .mcp-path {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    word-break: break-all;
+  }
+
+  .mcp-status {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .mcp-found { background: rgba(34,197,94,0.15); color: var(--green); }
+  .mcp-notfound { background: rgba(239,68,68,0.1); color: var(--red); opacity: 0.6; }
+  .mcp-has-servers { background: rgba(59,130,246,0.15); color: var(--accent); }
+
+  .mcp-servers {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: none;
+  }
+
+  .mcp-servers.open { display: block; }
+
+  .mcp-server {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+
+  .mcp-server-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--accent);
+  }
+
+  .mcp-server-cmd {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    color: var(--text2);
+    word-break: break-all;
+  }
+
+  .mcp-error {
+    color: var(--red);
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  .expand-icon {
+    color: var(--text2);
+    font-size: 14px;
+    transition: transform 0.15s;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text2);
+    font-size: 14px;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state {
+    text-align: center;
+    padding: 24px;
+    color: var(--text2);
+    font-size: 13px;
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Developer Dashboard</h1>
+  <div class="header-right">
+    <span id="status">Loading...</span>
+    <button class="btn" id="refresh-btn" onclick="loadDashboard()">Refresh</button>
+  </div>
+</header>
+
+<div class="section">
+  <div class="section-header">
+    <h2>IDEs & Editors</h2>
+    <span class="count-badge" id="ides-count">...</span>
+  </div>
+  <div class="grid" id="ides-grid">
+    <div class="loading"><span class="spinner"></span> Scanning...</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <h2>LLMs & Coding Agents</h2>
+    <span class="count-badge" id="llms-count">...</span>
+  </div>
+  <div class="grid" id="llms-grid">
+    <div class="loading"><span class="spinner"></span> Scanning...</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <h2>MCP Configurations</h2>
+    <span class="count-badge" id="mcp-count">...</span>
+  </div>
+  <div class="mcp-list" id="mcp-list">
+    <div class="loading"><span class="spinner"></span> Scanning...</div>
+  </div>
+</div>
+
+<script>
+const ICON_LABELS = {
+  vscode: 'VS', cursor: 'Cu', claude: 'Cl', codex: 'Cx',
+  xcode: 'Xc', jetbrains: 'JB', sublime: 'ST', zed: 'Ze',
+  terminal: '>', ollama: 'OL', aider: 'Ai', openai: 'AI',
+  extension: 'Ex', model: 'ML', process: '!', github: 'GH',
+  windsurf: 'WS', lmstudio: 'LM', nova: 'Nv', android: 'AS',
+  atom: 'At', goose: 'Go', opencode: 'OC', default: '?'
+};
+
+function iconClass(icon) {
+  return `icon-${icon || 'default'}`;
+}
+
+function iconLabel(icon) {
+  return ICON_LABELS[icon] || ICON_LABELS.default;
+}
+
+function badgeFor(status, running) {
+  if (running) return '<span class="badge badge-running">Running</span>';
+  if (status === 'running') return '<span class="badge badge-process">Running</span>';
+  if (status === 'installed') return '<span class="badge badge-installed">Installed</span>';
+  if (status === 'available') return '<span class="badge badge-available">Available</span>';
+  if (status === 'downloaded') return '<span class="badge badge-available">Downloaded</span>';
+  return '';
+}
+
+function renderIDEs(ides) {
+  const grid = document.getElementById('ides-grid');
+  document.getElementById('ides-count').textContent = ides.length + ' found';
+
+  if (!ides.length) {
+    grid.innerHTML = '<div class="empty-state">No IDEs detected</div>';
+    return;
+  }
+
+  grid.innerHTML = ides.map(ide => `
+    <div class="card ${ide.running ? 'card-active' : ''}">
+      <div class="card-icon ${iconClass(ide.icon)}">${iconLabel(ide.icon)}</div>
+      <div class="card-title">${esc(ide.name)}</div>
+      <div class="card-detail">${esc(ide.version || '')}</div>
+      ${badgeFor(null, ide.running)}
+      <div class="card-type">${esc(ide.type)}</div>
+    </div>
+  `).join('');
+}
+
+function renderLLMs(llms) {
+  const grid = document.getElementById('llms-grid');
+  document.getElementById('llms-count').textContent = llms.length + ' found';
+
+  if (!llms.length) {
+    grid.innerHTML = '<div class="empty-state">No LLMs or coding agents detected</div>';
+    return;
+  }
+
+  grid.innerHTML = llms.map(l => `
+    <div class="card">
+      <div class="card-icon ${iconClass(l.icon)}">${iconLabel(l.icon)}</div>
+      <div class="card-title">${esc(l.name)}</div>
+      <div class="card-detail">${esc(l.version || '')}</div>
+      ${l.host ? `<div class="card-detail">Host: ${esc(l.host)}</div>` : ''}
+      ${badgeFor(l.status)}
+      <div class="card-type">${esc(l.type)}</div>
+    </div>
+  `).join('');
+}
+
+function renderMCP(configs) {
+  const list = document.getElementById('mcp-list');
+  const totalServers = configs.reduce((sum, c) => sum + (c.serverCount || 0), 0);
+  document.getElementById('mcp-count').textContent =
+    configs.length + ' locations, ' + totalServers + ' servers';
+
+  if (!configs.length) {
+    list.innerHTML = '<div class="empty-state">No MCP configuration locations found</div>';
+    return;
+  }
+
+  list.innerHTML = configs.map((cfg, i) => {
+    let statusClass = 'mcp-notfound';
+    let statusText = 'Not found';
+    if (cfg.exists && cfg.serverCount > 0) {
+      statusClass = 'mcp-has-servers';
+      statusText = cfg.serverCount + ' server' + (cfg.serverCount !== 1 ? 's' : '');
+    } else if (cfg.exists) {
+      statusClass = 'mcp-found';
+      statusText = 'No servers';
+    }
+
+    const serversHtml = cfg.servers && cfg.servers.length
+      ? cfg.servers.map(s => `
+          <div class="mcp-server">
+            <div class="mcp-server-name">${esc(s.name)}</div>
+            <div class="mcp-server-cmd">${esc(s.command)}${s.args && s.args.length ? ' ' + s.args.map(esc).join(' ') : ''}</div>
+            ${s.env && s.env.length ? `<div class="mcp-server-cmd">env: ${s.env.map(esc).join(', ')}</div>` : ''}
+            ${s.project ? `<div class="mcp-server-cmd">project: ${esc(s.project)}</div>` : ''}
+          </div>
+        `).join('')
+      : '<div style="color:var(--text2);font-size:12px;">No MCP servers configured</div>';
+
+    return `
+      <div class="mcp-card">
+        <div class="mcp-header" onclick="toggleMcp(${i})">
+          <div>
+            <div class="mcp-name">${esc(cfg.name)}</div>
+            <div class="mcp-path">${esc(cfg.path.replace('${location.origin}', '').replace(/^.*Users\/[^/]+/, '~'))}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="mcp-status ${statusClass}">${statusText}</span>
+            <span class="expand-icon" id="expand-${i}">&#9654;</span>
+          </div>
+        </div>
+        ${cfg.error ? `<div class="mcp-error">${esc(cfg.error)}</div>` : ''}
+        <div class="mcp-servers" id="mcp-servers-${i}">
+          ${serversHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleMcp(i) {
+  const el = document.getElementById('mcp-servers-' + i);
+  const icon = document.getElementById('expand-' + i);
+  if (el.classList.contains('open')) {
+    el.classList.remove('open');
+    icon.style.transform = 'rotate(0deg)';
+  } else {
+    el.classList.add('open');
+    icon.style.transform = 'rotate(90deg)';
+  }
+}
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+async function loadDashboard() {
+  const statusEl = document.getElementById('status');
+  const btn = document.getElementById('refresh-btn');
+  statusEl.textContent = 'Scanning...';
+  btn.disabled = true;
+
+  try {
+    const resp = await fetch('/api/all');
+    if (!resp.ok) throw new Error('Server error ' + resp.status);
+    const data = await resp.json();
+
+    renderIDEs(data.ides || []);
+    renderLLMs(data.llms || []);
+    renderMCP(data.mcp || []);
+
+    const t = new Date(data.timestamp);
+    statusEl.textContent = 'Updated ' + t.toLocaleTimeString();
+  } catch (err) {
+    statusEl.textContent = 'Error: ' + err.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// Auto-refresh every 30s
+setInterval(loadDashboard, 30000);
+
+// Initial load
+loadDashboard();
+</script>
+
+</body>
+</html>
